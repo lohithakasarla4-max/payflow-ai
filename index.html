@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayFlow AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">💳 PayFlow AI (PayPal Smart Invoice Agent)</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 mb-4">
+                <div class="card shadow-sm p-4 border-0">
+                    <h4 class="text-primary mb-3">✨ Create AI Invoice</h4>
+                    <form action="/generate_invoice" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Client Name</label>
+                            <input type="text" name="client_name" class="form-control" required placeholder="e.g., Acme Corp">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Amount ($ USD)</label>
+                            <input type="number" name="amount" class="form-control" required placeholder="150">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Project Description</label>
+                            <textarea name="description" class="form-control" rows="2" required placeholder="Web development services..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Process with AI & Create PayPal Link</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="card shadow-sm p-4 border-0">
+                    <h4 class="text-success mb-3">📋 Generated Invoices & AI Insights</h4>
+                    {% if not invoices %}
+                        <p class="text-muted">No invoices generated yet. Create one on the left!</p>
+                    {% endif %}
+                    <ul class="list-group">
+                        {% for inv in invoices %}
+                        <li class="list-group-item mb-3 shadow-sm rounded">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>{{ inv.client }}</strong>
+                                <span class="badge bg-success">${{ inv.amount }} USD</span>
+                            </div>
+                            <p class="mb-1 text-muted small">{{ inv.description }}</p>
+                            <div class="mt-2">
+                                <span class="badge bg-info text-dark">AI Tag: {{ inv.category }}</span>
+                                <span class="badge bg-secondary">{{ inv.risk }}</span>
+                            </div>
+                            <div class="mt-2">
+                                <a href="{{ inv.link }}" target="_blank" class="btn btn-sm btn-outline-primary w-100">Pay via PayPal Sandbox ➔</a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
